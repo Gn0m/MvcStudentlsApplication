@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Details</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+</head>
+<body>
+<div class="container-fluid text-center">
+    <h1>Group Info</h1>
+    <div class="container">
+        <p>[[${group.id}]]</p>
+        <p>[[${group.groupName}]]</p>
+    </div>
+</div>
+
+<footer th:insert="layout/layouts.html :: footer"></footer>
+</body>
+</html>
