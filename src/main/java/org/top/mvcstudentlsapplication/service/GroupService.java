@@ -42,6 +42,6 @@ public class GroupService {
     }
 
     public Group findGroupById(int id) {
-        return repository.findById(id).orElseGet(null);
+        return repository.findById(id).orElse(null);
     }
 }
