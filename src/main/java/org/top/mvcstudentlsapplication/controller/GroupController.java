@@ -24,13 +24,13 @@ public class GroupController {
     public String showAllStudents(Model model) {
         List<Group> groupsList = service.listAllGroups();
         model.addAttribute("groupsList", groupsList);
-        return "groups-list";
+        return "groups/groups-list";
     }
 
     @GetMapping("/groups/new")
     public String showNewStudentForm(Model model) {
         model.addAttribute("group", new Group());
-        return "group-form";
+        return "groups/group-form";
     }
 
 
@@ -56,7 +56,7 @@ public class GroupController {
     public String updateStudent(@PathVariable("id") Integer id, Model model) {
         Group group = service.findGroupById(id);
         model.addAttribute("group", group);
-        return "group-form";
+        return "groups/group-form";
     }
 
     @PostMapping("/groups/update/{id}")
@@ -75,6 +75,6 @@ public class GroupController {
     public String detailsStudent(@PathVariable("id") Integer id, Model model) {
         Group group = service.findGroupById(id);
         model.addAttribute("group", group);
-        return "group-details";
+        return "groups/group-details";
     }
 }
