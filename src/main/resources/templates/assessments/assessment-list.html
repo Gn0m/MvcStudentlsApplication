@@ -29,10 +29,10 @@
                 <td>[[${assessment.getSubject().getSubjectName()}]]</td>
                 <td th:text="${#temporals.format(assessment.getDate(), 'yyyy-MM-dd HH:mm')}"/>
                 <td>
-                    <a th:href="@{'/assessment/delete/' + ${assessment.getId()}}" class="btn btn-danger">
+                    <a th:href="@{'/assessments/delete/' + ${assessment.getId()}}" class="btn btn-danger">
                         Delete
                     </a>
-                    <a th:href="@{'/assessment/update/' + ${assessment.id}}" class="btn btn-primary">
+                    <a th:href="@{'/assessments/update/' + ${assessment.id}}" class="btn btn-primary">
                         Update
                     </a>
                 </td>

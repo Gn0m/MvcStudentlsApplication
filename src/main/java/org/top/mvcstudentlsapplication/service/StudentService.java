@@ -2,6 +2,7 @@ package org.top.mvcstudentlsapplication.service;
 
 
 import org.springframework.stereotype.Service;
+import org.top.mvcstudentlsapplication.db.entity.Assessment;
 import org.top.mvcstudentlsapplication.db.entity.Student;
 import org.top.mvcstudentlsapplication.db.repository.StudentsRepository;
 
@@ -12,9 +13,11 @@ import java.util.Optional;
 public class StudentService {
 
     private final StudentsRepository repository;
+    private final AssessmentService assessmentService;
 
-    public StudentService(StudentsRepository repository) {
+    public StudentService(StudentsRepository repository, AssessmentService assessmentService) {
         this.repository = repository;
+        this.assessmentService = assessmentService;
     }
 
     public List<Student> listAllStudents() {
@@ -26,6 +29,17 @@ public class StudentService {
     }
 
     public void deleteStudentById(Integer id) {
+
+        List<Assessment> assessments = assessmentService.listByStudentId(id);
+
+        for (Assessment assessment: assessments) {
+
+            assessment.setSubject(null);
+            assessment.setStudent(null);
+            assessmentService.saveAssessment(assessment);
+            assessmentService.deleteAssessmentById(assessment.getId());
+
+        }
 
         Optional<Student> deleted = repository.findById(id);
 

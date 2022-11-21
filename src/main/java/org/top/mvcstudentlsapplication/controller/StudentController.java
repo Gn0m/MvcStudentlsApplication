@@ -16,10 +16,7 @@ import org.top.mvcstudentlsapplication.service.GroupService;
 import org.top.mvcstudentlsapplication.service.StudentService;
 import org.top.mvcstudentlsapplication.service.SubjectService;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 
 @Controller
@@ -100,7 +97,7 @@ public class StudentController {
     public String detailsStudent(@PathVariable("id") Integer id, Model model) {
         int AVG = 0;
         int AVGSubj;
-        Map<Integer, String> avgs = new HashMap<>();
+        Map<String, Integer> avgs = null;
 
         Student student = service.findStudentById(id);
         List<Assessment> assessments = assessmentService.listByStudentId(id);
@@ -114,6 +111,7 @@ public class StudentController {
         List<Subject> subjects = subjectService.listAllSubject();
 
         if (assessments.size() > 0) {
+            avgs = new HashMap<>();
 
             for (Subject subject : subjects) {
                 int count = 0;
@@ -121,19 +119,22 @@ public class StudentController {
 
                 for (Assessment assessment : assessments) {
 
-                    if (Objects.equals(assessment.getSubject().getSubjectName(), subject.getSubjectName())) {
-                        count++;
-                        AVGSubj += assessment.getAssessment();
+                    if (assessment.getSubject() !=null){
+
+                        if (Objects.equals(assessment.getSubject().getId(), subject.getId())) {
+                            count++;
+                            AVGSubj += assessment.getAssessment();
+                        }
                     }
                 }
 
-                if (AVGSubj != 0) {
+                if (AVGSubj > 0) {
                     AVGSubj = AVGSubj / count;
                 }
-
-                avgs.put(AVGSubj, subject.getSubjectName());
+                avgs.put(subject.getSubjectName(), AVGSubj);
             }
         }
+
         model.addAttribute("map", avgs);
         model.addAttribute("student", student);
         model.addAttribute("avg", AVG);

@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.top.mvcstudentlsapplication.db.entity.Assessment;
 import org.top.mvcstudentlsapplication.db.entity.Subject;
+import org.top.mvcstudentlsapplication.service.AssessmentService;
 import org.top.mvcstudentlsapplication.service.SubjectService;
 
 import java.util.List;
@@ -15,9 +17,11 @@ import java.util.List;
 public class SubjectController {
 
     private final SubjectService service;
+    private final AssessmentService assessmentService;
 
-    public SubjectController(SubjectService service) {
+    public SubjectController(SubjectService service, AssessmentService assessmentService) {
         this.service = service;
+        this.assessmentService = assessmentService;
     }
 
     @GetMapping("/subjects")
@@ -46,6 +50,14 @@ public class SubjectController {
 
     @GetMapping("/subjects/delete/{id}")
     public String deleteSubject(@PathVariable("id") Integer id, RedirectAttributes ra) {
+
+        List<Assessment> assessments = assessmentService.listBySubjectId(id);
+
+        for (Assessment assessment: assessments) {
+            assessment.setSubject(null);
+            assessmentService.saveAssessment(assessment);
+        }
+
         service.deleteSubjectById(id);
         ra.addFlashAttribute("message", "Subject deleted");
         return "redirect:/subjects";

@@ -24,8 +24,8 @@
             </thead>
             <tbody>
             <tr th:each="instance : ${map}">
-                <td th:text="${instance.key}"></td>
                 <td th:text="${instance.value}"></td>
+                <td th:text="${instance.key}"></td>
             </tr>
             </tbody>
         </table>

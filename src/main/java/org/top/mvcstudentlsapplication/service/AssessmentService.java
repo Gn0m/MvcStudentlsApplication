@@ -5,6 +5,7 @@ import org.top.mvcstudentlsapplication.db.entity.Assessment;
 import org.top.mvcstudentlsapplication.db.repository.AssessmentRepo;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AssessmentService {
@@ -23,7 +24,27 @@ public class AssessmentService {
         return repo.save(assessment);
     }
 
-    public List<Assessment> listByStudentId(Integer id){
+    public List<Assessment> listByStudentId(Integer id) {
         return repo.findAssessmentByStudentId(id);
+    }
+
+    public List<Assessment> listBySubjectId(Integer id) {
+        return repo.findAssessmentBySubjectId(id);
+    }
+
+    public Assessment findById(Integer id) {
+        return repo.findById(id).orElseGet(null);
+    }
+
+    public void deleteAssessmentById(Integer id) {
+
+        Optional<Assessment> deleted = repo.findById(id);
+
+        Assessment assessment = deleted.orElseGet(null);
+        assessment.setSubject(null);
+        assessment.setStudent(null);
+        repo.save(assessment);
+
+        repo.delete(assessment);
     }
 }
