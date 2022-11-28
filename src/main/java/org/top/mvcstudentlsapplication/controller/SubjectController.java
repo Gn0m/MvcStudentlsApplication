@@ -9,6 +9,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.top.mvcstudentlsapplication.db.entity.Assessment;
 import org.top.mvcstudentlsapplication.db.entity.Subject;
 import org.top.mvcstudentlsapplication.service.AssessmentService;
+import org.top.mvcstudentlsapplication.service.Filter;
 import org.top.mvcstudentlsapplication.service.SubjectService;
 
 import java.util.List;
@@ -18,27 +19,38 @@ public class SubjectController {
 
     private final SubjectService service;
     private final AssessmentService assessmentService;
+    private final Filter<Subject> containsFilter;
 
-    public SubjectController(SubjectService service, AssessmentService assessmentService) {
+    public SubjectController(SubjectService service, AssessmentService assessmentService, Filter<Subject> containsFilter) {
         this.service = service;
         this.assessmentService = assessmentService;
+        this.containsFilter = containsFilter;
     }
 
     @GetMapping("/subjects")
     public String showAllSubject(Model model) {
         List<Subject> subjectList = service.listAllSubject();
         model.addAttribute("subjectList", subjectList);
+        model.addAttribute("filter", containsFilter);
+        return "subjects/subject-list";
+    }
+
+    @PostMapping("/subjects")
+    public String showFilteredSubject(Filter<Subject> filter, Model model) {
+        List<Subject> subjectList = filter.getFiltered(service);
+        model.addAttribute("subjectList", subjectList);
+        model.addAttribute("filter", containsFilter);
         return "subjects/subject-list";
     }
 
     @GetMapping("/subjects/new")
-    public String showNewStudentForm(Model model) {
+    public String showNewSubjectForm(Model model) {
         model.addAttribute("subject", new Subject());
         return "subjects/subject-form";
     }
 
     @PostMapping("/subjects/new")
-    public String saveNewStudent(Subject subject, RedirectAttributes ra) {
+    public String saveNewSubject(Subject subject, RedirectAttributes ra) {
 
         Subject saved = service.saveSubject(subject);
 
@@ -53,7 +65,7 @@ public class SubjectController {
 
         List<Assessment> assessments = assessmentService.listBySubjectId(id);
 
-        for (Assessment assessment: assessments) {
+        for (Assessment assessment : assessments) {
             assessment.setSubject(null);
             assessmentService.saveAssessment(assessment);
         }
@@ -71,7 +83,7 @@ public class SubjectController {
     }
 
     @PostMapping("/subjects/update/{id}")
-    public String saveUpdateStudent(Subject subject, RedirectAttributes ra) {
+    public String saveUpdateSubject(Subject subject, RedirectAttributes ra) {
 
         Subject saved = service.saveSubject(subject);
 
@@ -80,6 +92,5 @@ public class SubjectController {
 
         return "redirect:/subjects";
     }
-
 
 }

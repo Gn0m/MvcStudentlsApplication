@@ -10,7 +10,14 @@
     <div th:if="${message != null}" class="alert alert-success">
         [[${message}]]
     </div>
-
+    <br>
+    <div>
+        <form th:action="@{/students}" method="post" th:object="${filter}">
+            <input type="text" th:field="*{match}">
+            <button>Find</button>
+        </form>
+    </div>
+    <br>
     <table class="table table-bordered">
         <thead class="table-dark">
         <tr>

@@ -11,12 +11,12 @@ import org.top.mvcstudentlsapplication.db.entity.Assessment;
 import org.top.mvcstudentlsapplication.db.entity.Group;
 import org.top.mvcstudentlsapplication.db.entity.Student;
 import org.top.mvcstudentlsapplication.db.entity.Subject;
-import org.top.mvcstudentlsapplication.service.AssessmentService;
-import org.top.mvcstudentlsapplication.service.GroupService;
-import org.top.mvcstudentlsapplication.service.StudentService;
-import org.top.mvcstudentlsapplication.service.SubjectService;
+import org.top.mvcstudentlsapplication.service.*;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 
 @Controller
@@ -26,18 +26,29 @@ public class StudentController {
     private final GroupService groupService;
     private final SubjectService subjectService;
     private final AssessmentService assessmentService;
+    private final Filter<Student> containsFilter;
 
-    public StudentController(StudentService service, GroupService groupService, SubjectService subjectService, AssessmentService assessmentService) {
+    public StudentController(StudentService service, GroupService groupService, SubjectService subjectService, AssessmentService assessmentService, Filter<Student> containsFilter) {
         this.service = service;
         this.groupService = groupService;
         this.subjectService = subjectService;
         this.assessmentService = assessmentService;
+        this.containsFilter = containsFilter;
     }
 
     @GetMapping("/students")
     public String showAllStudents(Model model) {
         List<Student> studentsList = service.listAllStudents();
         model.addAttribute("studentsList", studentsList);
+        model.addAttribute("filter", containsFilter);
+        return "students/students-list";
+    }
+
+    @PostMapping("/students")
+    public String showFilteredStudent(Filter<Student> filter, Model model) {
+        List<Student> studentsList = filter.getFiltered(service);
+        model.addAttribute("studentsList", studentsList);
+        model.addAttribute("filter", containsFilter);
         return "students/students-list";
     }
 
@@ -119,7 +130,7 @@ public class StudentController {
 
                 for (Assessment assessment : assessments) {
 
-                    if (assessment.getSubject() !=null){
+                    if (assessment.getSubject() != null) {
 
                         if (Objects.equals(assessment.getSubject().getId(), subject.getId())) {
                             count++;
