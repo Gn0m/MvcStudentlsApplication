@@ -3,6 +3,7 @@ package org.top.mvcstudentlsapplication.service;
 import org.springframework.stereotype.Service;
 import org.top.mvcstudentlsapplication.db.entity.Group;
 import org.top.mvcstudentlsapplication.db.entity.Student;
+import org.top.mvcstudentlsapplication.db.repository.FilterService;
 import org.top.mvcstudentlsapplication.db.repository.GroupRepository;
 import org.top.mvcstudentlsapplication.db.repository.StudentsRepository;
 
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class GroupService {
+public class GroupService implements FilterService<Group> {
 
     private final GroupRepository repository;
     private final StudentsRepository studentsRepository;
@@ -43,5 +44,12 @@ public class GroupService {
 
     public Group findGroupById(int id) {
         return repository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<Group> findByContains(String match) {
+        if (match == null || match.equals(""))
+            return (List<Group>) repository.findAll();
+        return ((List<Group>) repository.findAll()).stream().filter(s -> s.getGroupName().contains(match)).toList();
     }
 }

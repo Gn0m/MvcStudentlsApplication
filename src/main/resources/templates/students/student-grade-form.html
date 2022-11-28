@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Form</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+</head>
+<body>
+<div class="container-fluid text-center">
+    <h1>Add new assessment</h1>
+    <form method="post">
+        <div>
+            <label>Subject Name: </label>
+            <input type="radio" th:name="subject" th:text="${subject.subjectName}" th:value="${subject.id}"
+                   minlength="1" maxlength="50" th:each="subject: ${subjects}"/>
+            <br>
+            <label>Assessment: </label>
+            <input type="number" th:name="assessment" th:value="assessment" min="1"
+                   max="5"/>
+        </div>
+
+        <button type="submit" class="btn btn-success">Save</button>
+        <a th:href="@{/students}" class="btn btn-danger">Cancel</a>
+    </form>
+</div>
+
+<footer th:insert="layout/layouts.html :: footer"></footer>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Details</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+</head>
+<body>
+<div class="container-fluid text-center">
+    <h1>Student Info</h1>
+    <div class="container">
+        <p>[[${student.firstName}]]</p>
+        <p>[[${student.lastName}]]</p>
+        <p>[[${student.group}]]</p>
+        <p>Среднаяя оценка: [[${avg}]]</p>
+    </div>
+    <div class="container">
+        <table class="table table-bordered">
+            <thead class="table-dark">
+            <tr>
+                <th>AVG</th>
+                <th>Subject</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="instance : ${map}">
+                <td th:text="${instance.value}"></td>
+                <td th:text="${instance.key}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="container">
+        <table class="table table-bordered">
+            <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Assessment</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="assessment: ${list}">
+                <tr>
+                    <td>[[${assessment.id}]]</td>
+                    <td th:text="${#temporals.format(assessment.getDate(), 'yyyy-MM-dd HH:mm')}"></td>
+                    <td>[[${assessment.assessment}]]</td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<footer th:insert="layout/layouts.html :: footer"></footer>
+</body>
+</html>

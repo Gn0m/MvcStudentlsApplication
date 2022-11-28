@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Form</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+</head>
+<body>
+<div class="container-fluid text-center">
+  <h1>Create group</h1>
+  <form method="post" th:object="${assessment}">
+    <label>Assessment : </label>
+    <input type="text" th:field="*{assessment}" required min="1" max="5"/>
+    <input type="hidden" th:field="*{subject}"/>
+    <input type="hidden" th:field="*{student}"/>
+    <input type="hidden" th:field="*{date}"/>
+    <button type="submit" class="btn btn-success">Save</button>
+    <a th:href="@{/assessments}" class="btn btn-danger">Cancel</a>
+  </form>
+</div>
+
+<footer th:insert="layout/layouts.html :: footer"></footer>
+</body>
+</html>

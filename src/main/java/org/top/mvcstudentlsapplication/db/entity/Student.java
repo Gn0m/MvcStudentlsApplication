@@ -3,7 +3,7 @@ package org.top.mvcstudentlsapplication.db.entity;
 import javax.persistence.*;
 
 
-//
+
 @Entity
 @Table(name="student_t")
 public class Student {
@@ -17,10 +17,13 @@ public class Student {
     @Column(nullable = false, length = 200)
     private String lastName;
 
-    // ссылка на группу
     @ManyToOne()
     @JoinColumn(name="group_id")
     private Group group;
+
+
+    public Student() {
+    }
 
     public Integer getId() {
         return id;

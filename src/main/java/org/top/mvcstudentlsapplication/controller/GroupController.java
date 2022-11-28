@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.top.mvcstudentlsapplication.db.entity.Group;
+import org.top.mvcstudentlsapplication.service.Filter;
 import org.top.mvcstudentlsapplication.service.GroupService;
 
 import java.util.List;
@@ -15,27 +16,38 @@ import java.util.List;
 public class GroupController {
 
     private final GroupService service;
+    private final Filter<Group> containsFilter;
 
-    public GroupController(GroupService service) {
+    public GroupController(GroupService service, Filter<Group> containsFilter) {
         this.service = service;
+        this.containsFilter = containsFilter;
     }
 
     @GetMapping("/groups")
-    public String showAllStudents(Model model) {
+    public String showAllGroup(Model model) {
         List<Group> groupsList = service.listAllGroups();
         model.addAttribute("groupsList", groupsList);
-        return "groups-list";
+        model.addAttribute("filter", containsFilter);
+        return "groups/groups-list";
+    }
+
+    @PostMapping("/groups")
+    public String showFilteredGroup(Filter<Group> filter, Model model) {
+        List<Group> studentsList = filter.getFiltered(service);
+        model.addAttribute("groupsList", studentsList);
+        model.addAttribute("filter", containsFilter);
+        return "groups/groups-list";
     }
 
     @GetMapping("/groups/new")
-    public String showNewStudentForm(Model model) {
+    public String showNewGroupForm(Model model) {
         model.addAttribute("group", new Group());
-        return "group-form";
+        return "groups/group-form";
     }
 
 
     @PostMapping("/groups/new")
-    public String saveNewStudent(Group group, RedirectAttributes ra) {
+    public String saveNewGroup(Group group, RedirectAttributes ra) {
 
         Group saved = service.saveGroup(group);
 
@@ -46,21 +58,21 @@ public class GroupController {
     }
 
     @GetMapping("/groups/delete/{id}")
-    public String deleteStudent(@PathVariable("id") Integer id, RedirectAttributes ra) {
+    public String deleteGroup(@PathVariable("id") Integer id, RedirectAttributes ra) {
         service.deleteGroupById(id);
         ra.addFlashAttribute("message", "Group deleted");
         return "redirect:/groups";
     }
 
     @GetMapping("/groups/update/{id}")
-    public String updateStudent(@PathVariable("id") Integer id, Model model) {
+    public String updateGroup(@PathVariable("id") Integer id, Model model) {
         Group group = service.findGroupById(id);
         model.addAttribute("group", group);
-        return "group-form";
+        return "groups/group-form";
     }
 
     @PostMapping("/groups/update/{id}")
-    public String saveUpdateStudent(Group group, RedirectAttributes ra) {
+    public String saveUpdateGroup(Group group, RedirectAttributes ra) {
 
 
         Group groupUpdate = service.saveGroup(group);
@@ -72,9 +84,9 @@ public class GroupController {
     }
 
     @GetMapping("/groups/details/{id}")
-    public String detailsStudent(@PathVariable("id") Integer id, Model model) {
+    public String detailsGroup(@PathVariable("id") Integer id, Model model) {
         Group group = service.findGroupById(id);
         model.addAttribute("group", group);
-        return "group-details";
+        return "groups/group-details";
     }
 }

@@ -3,17 +3,15 @@ package org.top.mvcstudentlsapplication.db.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "group_t")
-public class Group {
+@Table(name = "subject_t")
+public class Subject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    private String subjectName;
 
-    @Column(nullable = false, length = 50)
-    private String groupName;
-
-    public Group() {
+    public Subject() {
     }
 
     public Integer getId() {
@@ -24,16 +22,17 @@ public class Group {
         this.id = id;
     }
 
-    public String getGroupName() {
-        return groupName;
+    public String getSubjectName() {
+        return subjectName;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
     }
 
     @Override
     public String toString() {
-        return id + " - " + groupName;
+        return "Id=" + id +
+                ", subjectName='" + subjectName;
     }
 }
